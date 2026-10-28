@@ -4,44 +4,113 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.graphics.Color;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ScrollView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
+
+    private final int navy = Color.rgb(35, 45, 65);
+    private final int blue = Color.rgb(55, 105, 210);
+    private final int background = Color.rgb(245, 247, 251);
+
+    private LinearLayout mainLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        showHome();
+    }
 
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setGravity(Gravity.CENTER);
-        layout.setPadding(32, 32, 32, 32);
-        layout.setBackgroundColor(Color.WHITE);
+    private TextView createText(String text, int size, int color) {
+        TextView view = new TextView(this);
+        view.setText(text);
+        view.setTextSize(size);
+        view.setTextColor(color);
+        view.setPadding(16, 12, 16, 12);
+        return view;
+    }
 
-        TextView title = new TextView(this);
-        title.setText("ZenApp");
-        title.setTextSize(32);
-        title.setTextColor(Color.rgb(35, 45, 65));
-        title.setGravity(Gravity.CENTER);
+    private void showHome() {
+        ScrollView scrollView = new ScrollView(this);
+        scrollView.setBackgroundColor(background);
 
-        TextView subtitle = new TextView(this);
-        subtitle.setText("Your world. Your connections.");
-        subtitle.setTextSize(16);
-        subtitle.setTextColor(Color.DKGRAY);
-        subtitle.setGravity(Gravity.CENTER);
+        mainLayout = new LinearLayout(this);
+        mainLayout.setOrientation(LinearLayout.VERTICAL);
+        mainLayout.setPadding(20, 24, 20, 24);
 
-        LinearLayout.LayoutParams params =
+        TextView title = createText("ZenApp", 32, navy);
+        title.setTypeface(null, android.graphics.Typeface.BOLD);
+        mainLayout.addView(title);
+
+        TextView tagline = createText(
+                "Your world. Your connections.", 16, Color.DKGRAY);
+        mainLayout.addView(tagline);
+
+        TextView welcome = createText(
+                "Welcome to your world", 23, navy);
+        welcome.setPadding(16, 36, 16, 12);
+        welcome.setTypeface(null, android.graphics.Typeface.BOLD);
+        mainLayout.addView(welcome);
+
+        TextView description = createText(
+                "Discover people, share ideas and stay connected.",
+                16, Color.DKGRAY);
+        mainLayout.addView(description);
+
+        addFeature("👥  Find People",
+                "Explore opportunities to connect with others.");
+        addFeature("💬  Messages",
+                "Your conversations will appear here when messaging is implemented.");
+        addFeature("🌍  Explore",
+                "Discover content and ideas from your community.");
+        addFeature("👤  My Profile",
+                "Your personal profile features will appear here.");
+
+        TextView note = createText(
+                "ZenApp is getting started. More features are coming.",
+                14, Color.GRAY);
+        note.setPadding(16, 32, 16, 16);
+        mainLayout.addView(note);
+
+        scrollView.addView(mainLayout);
+        setContentView(scrollView);
+    }
+
+    private void addFeature(String heading, String description) {
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setPadding(12, 8, 12, 8);
+        card.setBackgroundColor(Color.WHITE);
+
+        LinearLayout.LayoutParams cardParams =
                 new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                );
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+        cardParams.setMargins(0, 12, 0, 0);
 
-        params.setMargins(0, 24, 0, 0);
+        TextView title = createText(heading, 19, navy);
+        title.setTypeface(null, android.graphics.Typeface.BOLD);
 
-        layout.addView(title);
-        layout.addView(subtitle, params);
+        TextView details = createText(description, 14, Color.DKGRAY);
 
-        setContentView(layout);
+        card.addView(title);
+        card.addView(details);
+
+        card.setElevation(3);
+        card.setClickable(true);
+        card.setFocusable(true);
+
+        card.setOnClickListener(v ->
+                Toast.makeText(
+                        MainActivity.this,
+                        heading + " selected",
+                        Toast.LENGTH_SHORT
+                ).show()
+        );
+
+        mainLayout.addView(card, cardParams);
     }
 }
